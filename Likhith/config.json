@@ -1,0 +1,16 @@
+{
+    "detection_model": "MLP",
+    "main_model": "Llama2",
+    "dataset": "CIFAR10",
+    "result_path": "./results",
+    "classifier_dim": [256, 128, 64, 1],
+    "hidden_dim": 768,
+    "batch_size": 32,
+    "epochs": 5,
+    "lr": 0.001,
+    "wandb": true,
+    "log": true,
+    "debug": false,
+    "tag": "experiment_1",
+    "checkpoint_epoch": 5
+}

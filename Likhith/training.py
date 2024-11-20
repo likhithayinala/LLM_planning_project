@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from detection_model import select_det_model
 from main_model import select_main_model
+from torch.utils.data import Dataset, DataLoader
 from dataloader import dataset
 import logging
 import wandb
@@ -43,7 +44,7 @@ def set_config(args):
     """
     Sets the configuration dictionary using the specified configuration file and command line arguments.
     """
-    with open(args[config]) as f:
+    with open(args.config) as f:
         config = json.load(f)
     for arg in vars(args):
         value = getattr(args, arg)
@@ -68,7 +69,7 @@ def train(config):
         None
     """
     # Initialize the dataloader
-    dataloader = dataset(config)
+    dataloader = dataloader = DataLoader(dataset(config), batch_size=config['batch_size'], shuffle=True)
     # Initialize the detection model
     detection_model = select_det_model(config['detection_model'],config)
     # Initialize the main model
@@ -86,6 +87,7 @@ def train(config):
                 optimizer.zero_grad()
                 state = main_model(data)
                 output = detection_model(state)
+                labels = labels.unsqueeze(1).unsqueeze(1).to(torch.float32)
                 loss = criterion(output, labels)
                 loss.backward()
                 optimizer.step()
@@ -129,6 +131,7 @@ def train(config):
             wandb.alert(title="Training Error", text=str(e))
         if config['log']:
             logging.error(str(e))
+        raise e
 
 
 if __name__ == '__main__':
@@ -142,5 +145,5 @@ if __name__ == '__main__':
     parser.add_argument('--log', type=bool, default=True)
     parser.add_argument('--tag','-t', type=str, default='')
     args = parser.parse_args()
-    config = set_config(args.config)
+    config = set_config(args)
     train(config)
