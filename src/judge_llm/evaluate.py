@@ -23,7 +23,7 @@ import numpy as np
 from rich.console import Console
 from rich.table import Table
 
-from judge_llm import QAModeration
+from moderation import QAModeration
 
 
 MODEL_NAMES = ['alpaca-7b', 'alpaca-13b', 'vicuna-7b', 'gpt-3.5-turbo']

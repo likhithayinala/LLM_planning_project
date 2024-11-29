@@ -30,7 +30,7 @@ from dataset import (
 from torch.utils.data import Dataset
 
 from constants import PROMPT_INPUT
-from judge_llm import QAModeration
+from moderation import QAModeration
 
 
 @dataclass
