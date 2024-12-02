@@ -23,7 +23,6 @@ def results(config):
     """
     Creates the necessary directories and files to store the results of the training process.
     """
-    # result_path = config['result_path']+config['detection_model']+'_'+config['main_model']+'_'+config['dataset']+'_'+config['tag']
     result_path = os.path.join(config['result_path'],config['detection_model']+'_'+config['main_model']+'_'+config['dataset']+'_'+config['tag'])
     create_dir(result_path)
     # Create a file to log the results
@@ -57,6 +56,11 @@ def set_config(args):
     config = results(config)
     return config
 
+def data_processing(data):
+    """
+    Processes the data to be fed into the model.
+    """
+    pass
 
 def train(config):
     """
@@ -68,12 +72,18 @@ def train(config):
     Returns:
         None
     """
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    data = pd.read_csv(config['dataset_path'])
+    # Split the data into train and test
+    train_data = data[:int(len(data)*0.8)]
+    test_data = data[int(len(data)*0.8):]
     # Initialize the dataloader
-    dataloader = dataloader = DataLoader(dataset(config), batch_size=config['batch_size'], shuffle=True)
+    train_dataloader = DataLoader(dataset(train_data,config), batch_size=config['batch_size'], shuffle=True)
+    #test_dataloader = DataLoader(dataset(test_data,config), batch_size=config['batch_size'], shuffle=True)
     # Initialize the detection model
-    detection_model = select_det_model(config['detection_model'],config)
+    detection_model = select_det_model(config['detection_model'],config).to(device)
     # Initialize the main model
-    main_model = select_main_model(config['main_model'],config)
+    main_model = select_main_model(config['main_model'],config).to(device)
     # Initialize the optimizer
     optimizer = torch.optim.Adam(detection_model.parameters(), lr=config['lr'])
     # Initialize the loss function
@@ -82,20 +92,21 @@ def train(config):
         for epoch in range(config['epochs']):
             total_correct = 0
             total_samples = 0
-            
-            for i, (data, labels) in enumerate(dataloader):
-                optimizer.zero_grad()
-                state = main_model(data)
-                output = detection_model(state)
-                labels = labels.unsqueeze(1).unsqueeze(1).to(torch.float32)
-                loss = criterion(output, labels)
-                loss.backward()
-                optimizer.step()
-                
-                # Calculate accuracy
-                _, predicted = torch.max(output.data, 1)
-                total_samples += labels.size(0)
-                total_correct += (predicted == labels).sum().item()
+            for i, data in enumerate(train_dataloader):
+                    response, safety_class, token_hidden_states, prompt_hidden_states = data
+                    optimizer.zero_grad()
+                    state = token_hidden_states[:,config['layer'],config['token'],:]
+                    state, labels = state.to(device), labels.to(device)
+                    output = detection_model(state)
+                    labels = labels.unsqueeze(1).unsqueeze(1).to(torch.float32)
+                    loss = criterion(output, labels)
+                    loss.backward()
+                    optimizer.step()
+                    
+                    # Calculate accuracy
+                    _, predicted = torch.max(output.data, 1)
+                    total_samples += labels.size(0)
+                    total_correct += (predicted == labels).sum().item()
                 
             # Calculate epoch accuracy
             epoch_accuracy = 100 * total_correct / total_samples
@@ -143,7 +154,9 @@ if __name__ == '__main__':
     parser.add_argument('--debug', type=bool, default=False)
     parser.add_argument('--wandb', type=bool, default=True)
     parser.add_argument('--log', type=bool, default=True)
-    parser.add_argument('--tag','-t', type=str, default='')
+    parser.add_argument('--tag', type=str, default='')
+    parser.add_argument('-l', '--layer', type=int, default=0)
+    parser.add_argument('-t', '--token', type=int, default=0)
     args = parser.parse_args()
     config = set_config(args)
     train(config)

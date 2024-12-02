@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from peft import get_peft_config, PeftModel, get_peft_model, LoraConfig, TaskType
 from transformers import GPT2Model, GPT2Config, BertModel, BertConfig, AutoModelForCausalLM
 
 def select_det_model(model_name,config):
@@ -16,6 +17,7 @@ def select_det_model(model_name,config):
             return Qwen2(config)
         case _:
             raise ValueError(f"Model {model_name} not supported")
+
 
 class MLP(nn.Module):
     def __init__(self,config):
@@ -40,6 +42,10 @@ class DistilGPTClassifier(nn.Module):
         self.config = config
         self.model_config = GPT2Config.from_pretrained("distilgpt2")
         self.model = GPT2Model.from_pretrained("distilgpt2", config=self.model_config)
+        peft_config = LoraConfig(
+        task_type=TaskType.TOKEN_CLS, inference_mode=False, r=16, lora_alpha=16, lora_dropout=0.1, bias="all"
+    )
+        self.model = get_peft_model(self.model,peft_config)
         self.hdim_fc = nn.Linear(self.config['hidden_dim'], self.model_config.n_embd)
         self.config['classifier_dim'] = [self.model_config.n_embd] + config['classifier_dim']
         for i in range(len(config['classifier_dim'])-1):
@@ -61,6 +67,10 @@ class TinyBERTClassifier(nn.Module):
         self.config = config
         self.model_config = BertConfig.from_pretrained("huawei-noah/TinyBERT_General_4L_312D")
         self.model = BertModel.from_pretrained("huawei-noah/TinyBERT_General_4L_312D", config=self.model_config)
+        peft_config = LoraConfig(
+        task_type=TaskType.TOKEN_CLS, inference_mode=False, r=16, lora_alpha=16, lora_dropout=0.1, bias="all"
+    )
+        self.model = get_peft_model(self.model,peft_config)
         self.hdim_fc = nn.Linear(self.config['hidden_dim'], self.model_config.hidden_size)
         self.config['classifier_dim'] = [self.model_config.hidden_size] + config['classifier_dim']
         for i in range(len(config['classifier_dim'])-1):
@@ -80,6 +90,10 @@ class Qwen2(nn.Module):
         super(Qwen2, self).__init__()
         self.config = config
         self.model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-0.5B",output_hidden_states=True,return_dict_in_generate=True)
+        peft_config = LoraConfig(
+        task_type=TaskType.TOKEN_CLS, inference_mode=False, r=16, lora_alpha=16, lora_dropout=0.1, bias="all"
+    )
+        self.model = get_peft_model(self.model,peft_config)
         self.hdim_fc = nn.Linear(self.config['hidden_dim'], 896)
         self.config['classifier_dim'] = [896] + config['classifier_dim']
         for i in range(len(config['classifier_dim'])-1):

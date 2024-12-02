@@ -2,9 +2,10 @@
     "detection_model": "MLP",
     "main_model": "Llama2",
     "dataset": "CIFAR10",
+    "hidden_states_path": "./hidden_data.h5",
     "result_path": "./results",
     "classifier_dim": [256, 128, 64, 1],
-    "hidden_dim": 768,
+    "hidden_dim": 4096,
     "batch_size": 32,
     "epochs": 5,
     "lr": 0.001,
@@ -12,5 +13,6 @@
     "log": true,
     "debug": false,
     "tag": "experiment_1",
-    "checkpoint_epoch": 5
+    "checkpoint_epoch": 5,
+    "data_path": "./data"
 }
