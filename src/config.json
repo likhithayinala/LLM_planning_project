@@ -4,7 +4,7 @@
     "dataset": "CIFAR10",
     "hidden_states_path": "/home/la3073/data/hidden_data_token_new.h5",
     "result_path": "./results",
-    "classifier_dim": [256, 128, 64, 1],
+    "classifier_dim": [1024, 512, 256, 2],
     "hidden_dim": 4096,
     "batch_size": 32,
     "epochs": 5,

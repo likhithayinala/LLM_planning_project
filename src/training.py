@@ -100,15 +100,18 @@ def train(config):
                     state = token_hidden_states[:,config['layer'] - 1,config['token'] - 1,:]
                     state, labels = state.to(device), safety_class.to(device)
                     output = detection_model(state)
-                    labels = labels.unsqueeze(1).to(torch.float32)
+                    labels = labels.to(torch.long)
+                    # print(labels, output)
                     loss = criterion(output, labels)
+                    #print(loss)
                     loss.backward()
                     optimizer.step()
                     
                     # Calculate accuracy
                     _, predicted = torch.max(output.data, 1)
+                    #print(labels,predicted)
                     total_samples += labels.size(0)
-                    total_correct += (predicted == labels.squeeze(1)).sum().item()
+                    total_correct += (predicted == labels).sum().item()
                    
                 
             # Calculate epoch accuracy
