@@ -10,6 +10,7 @@ import wandb
 import os
 import json
 import argparse
+import pandas as pd
 
 def create_dir(path):
     """
@@ -95,10 +96,10 @@ def train(config):
             for i, data in enumerate(train_dataloader):
                     response, safety_class, token_hidden_states, prompt_hidden_states = data
                     optimizer.zero_grad()
-                    state = token_hidden_states[:,config['layer'],config['token'],:]
-                    state, labels = state.to(device), labels.to(device)
+                    state = token_hidden_states[:,config['layer'] - 1,config['token'] - 1,:]
+                    state, labels = state.to(device), safety_class.to(device)
                     output = detection_model(state)
-                    labels = labels.unsqueeze(1).unsqueeze(1).to(torch.float32)
+                    labels = labels.unsqueeze(1).to(torch.float32)
                     loss = criterion(output, labels)
                     loss.backward()
                     optimizer.step()
