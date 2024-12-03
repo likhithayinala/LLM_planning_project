@@ -17,14 +17,14 @@ import pandas as pd
 from tqdm import tqdm 
 import numpy as np
 import h5py
-folder_path = 'dataset/genai_project_total/safety-data/'
+folder_path = '/home/la3073/data/safety-data'
 dataset = 'dataset.csv'
 save_path = 'final_dataset'
 hidden_states_path = 'final_dataset/hidden_states'
 dirlist  = []
 counter = 0
-df = pd.read_csv(dataset)
-with h5py.File('hidden_data.h5', 'w') as hdf:
+#df = pd.read_csv(dataset)
+with h5py.File('/home/la3073/data/hidden_data_token_new.h5', 'w') as hdf:
     # Initialize datasets with an unknown final size using maxshape
     hdf.create_dataset('token_hidden_states', shape=(0, 33,2,4096), maxshape=(None, 33,2,4096), dtype='float32')
     

@@ -2,7 +2,7 @@
     "detection_model": "MLP",
     "main_model": "Llama2",
     "dataset": "CIFAR10",
-    "hidden_states_path": "/home/la3073/hidden_data.h5",
+    "hidden_states_path": "/home/la3073/data/hidden_data_token_new.h5",
     "result_path": "./results",
     "classifier_dim": [256, 128, 64, 1],
     "hidden_dim": 4096,
@@ -14,5 +14,5 @@
     "debug": false,
     "tag": "experiment_1",
     "checkpoint_epoch": 5,
-    "dataset_path": "/home/la3073/safety-dataset.csv"
+    "dataset_path": "/home/la3073/data/safety-dataset.csv"
 }

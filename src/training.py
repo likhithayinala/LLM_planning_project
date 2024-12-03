@@ -9,6 +9,7 @@ import logging
 import wandb
 import os
 import json
+from tqdm import tqdm
 import argparse
 import pandas as pd
 
@@ -90,10 +91,10 @@ def train(config):
     # Initialize the loss function
     criterion = nn.CrossEntropyLoss()
     try:
-        for epoch in range(config['epochs']):
+        for epoch in tqdm(range(config['epochs'])):
             total_correct = 0
-            total_samples = 0
-            for i, data in enumerate(train_dataloader):
+            total_samples = 0;print("Epoch:",epoch)
+            for i, data in tqdm(enumerate(train_dataloader)):
                     response, safety_class, token_hidden_states, prompt_hidden_states = data
                     optimizer.zero_grad()
                     state = token_hidden_states[:,config['layer'] - 1,config['token'] - 1,:]
@@ -107,7 +108,8 @@ def train(config):
                     # Calculate accuracy
                     _, predicted = torch.max(output.data, 1)
                     total_samples += labels.size(0)
-                    total_correct += (predicted == labels).sum().item()
+                    total_correct += (predicted == labels.squeeze(1)).sum().item()
+                   
                 
             # Calculate epoch accuracy
             epoch_accuracy = 100 * total_correct / total_samples
