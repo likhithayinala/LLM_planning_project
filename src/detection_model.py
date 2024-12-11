@@ -58,12 +58,13 @@ class DistilGPTClassifier(nn.Module):
     
     def forward(self, x):
         x = self.hdim_fc(x)
+        x = x.unsqueeze(1)
         for block in self.model.h:
             x,_ = block(x)
         for i in range(len(self.config['classifier_dim'])-1):
             x = getattr(self,'fc'+str(i+1))(x)
             x = F.relu(x)
-        return x
+        return x.squeeze(1)
 
 class TinyBERTClassifier(nn.Module):
     def __init__(self, config):
@@ -81,14 +82,17 @@ class TinyBERTClassifier(nn.Module):
             setattr(self,'fc'+str(i+1),nn.Linear(config['classifier_dim'][i],config['classifier_dim'][i+1]))
     
     def forward(self,x):
+        # X will be batch_size, hid_dim
         x = self.hdim_fc(x)
+        # BERT expects ( batch_size, seq_length, hid_dim). Our sequence length is 1. Hnece,
+        x = x.unsqueeze(1)
         for block in self.model.encoder.layer:
             x = block(x)[0]
         for i in range(len(self.config['classifier_dim'])-1):
             x = getattr(self,'fc'+str(i+1))(x)
             x = F.relu(x)
-        return x
-
+        return x.squeeze(1)
+        
 class Qwen2(nn.Module):
     def __init__(self, config):
         super(Qwen2, self).__init__()
@@ -105,12 +109,13 @@ class Qwen2(nn.Module):
     
     def forward(self,x):
         x = self.hdim_fc(x)
+        x = x.unsqueeze(1)
         outputs = self.model(inputs_embeds=x)
         x = outputs.hidden_states[-1]
         for i in range(len(self.config['classifier_dim'])-1):
             x = getattr(self,'fc'+str(i+1))(x)
             x = F.relu(x)
-        return x
+        return x.squeeze(1)
 
 
 # Write a function to test all the models, pass random data through them and check if the output shape is as expected

@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from detection_model import select_det_model
 from main_model import select_main_model
 from torch.utils.data import Dataset, DataLoader
-from dataloader import dataset
+from dataloader_refusal import dataset
 import logging
 import wandb
 import os
@@ -55,6 +55,9 @@ def set_config(args):
         config.update({'wandb': False, 'log': False})
     if config['wandb']:
         wandb.init(project='bad_content_detection', config=config)
+        # Give the run a tag if specified
+        if config['tag']:
+            wandb.run.tags = [config['tag']]
     config = results(config)
     return config
 
