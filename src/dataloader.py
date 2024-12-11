@@ -22,8 +22,8 @@ class BTDataset(Dataset):
         safety_class = self.data.loc[index]['logits']
         with h5py.File(self.hidden_states, 'r') as hdf:
             token_hidden_states = hdf['token_hidden_states'][index]
-            original_size = int(hdf['original_sizes'][index])
-            prompt_hidden_states = hdf['prompt_hidden_states'][index]
+           # original_size = int(hdf['original_sizes'][index])
+            prompt_hidden_states = 1#hdf['prompt_hidden_states'][index]
             # Cut the padded arrays to their original size. Not doing this as it interfers with torch.stack.
             # prompt_hidden_states = prompt_hidden_states[:, :original_size, :]
         return (response, safety_class, token_hidden_states, prompt_hidden_states)

@@ -9,6 +9,7 @@ import logging
 import wandb
 import os
 import json
+from tqdm import tqdm
 import argparse
 import pandas as pd
 from tqdm import tqdm
@@ -93,22 +94,26 @@ def train(config):
     try:
         for epoch in tqdm(range(config['epochs'])):
             total_correct = 0
-            total_samples = 0
+            total_samples = 0;print("Epoch:",epoch)
             for i, data in tqdm(enumerate(train_dataloader)):
                     response, safety_class, token_hidden_states, prompt_hidden_states = data
                     optimizer.zero_grad()
                     state = token_hidden_states[:,config['layer'] - 1,config['token'] - 1,:]
                     state, labels = state.to(device), safety_class.to(device)
                     output = detection_model(state)
-                    labels = labels.unsqueeze(1).to(torch.float32)
+                    labels = labels.to(torch.long)
+                    # print(labels, output)
                     loss = criterion(output, labels)
+                    #print(loss)
                     loss.backward()
                     optimizer.step()
                     
                     # Calculate accuracy
                     _, predicted = torch.max(output.data, 1)
+                    #print(labels,predicted)
                     total_samples += labels.size(0)
                     total_correct += (predicted == labels).sum().item()
+                   
                 
             # Calculate epoch accuracy
             epoch_accuracy = 100 * total_correct / total_samples
