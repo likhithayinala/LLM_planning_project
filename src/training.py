@@ -91,7 +91,7 @@ def train(config):
     # Initialize the main model
     main_model = select_main_model(config['main_model'],config).to(device)
     # Initialize the optimizer
-    optimizer = torch.optim.Adam(detection_model.parameters(), lr=config['lr'])
+    optimizer = torch.optim.Adam(detection_model.parameters(), lr=config['lr'], weight_decay=0.01)
     # Initialize the loss function
     criterion = nn.CrossEntropyLoss()
     try:
