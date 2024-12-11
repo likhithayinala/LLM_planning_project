@@ -28,12 +28,16 @@ class MLP(nn.Module):
         self.config['classifier_dim'] = [config['hidden_dim']] + config['classifier_dim']
         for i in range(len(config['classifier_dim'])-1):
             setattr(self,'fc'+str(i+1),nn.Linear(config['classifier_dim'][i],config['classifier_dim'][i+1]))
+            if i < len(config['classifier_dim']) - 2:  # Don't add BatchNorm after the last layer
+                setattr(self, f'bn{i+1}', nn.BatchNorm1d(config['classifier_dim'][i+1]))
         
 
     def forward(self,x):
         for i in range(len(self.config['classifier_dim'])-1):
             x = getattr(self,'fc'+str(i+1))(x)
-            x = F.relu(x)
+            if i < len(self.config['classifier_dim']) - 2:  # Don't apply BatchNorm and ReLU after the last layer
+                x = getattr(self, f'bn{i+1}')(x)
+                x = F.relu(x)
         return x
 
 class DistilGPTClassifier(nn.Module):
@@ -84,7 +88,7 @@ class TinyBERTClassifier(nn.Module):
             x = getattr(self,'fc'+str(i+1))(x)
             x = F.relu(x)
         return x
-        
+
 class Qwen2(nn.Module):
     def __init__(self, config):
         super(Qwen2, self).__init__()
