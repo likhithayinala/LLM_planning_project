@@ -11,7 +11,7 @@ import os
 import json
 import argparse
 import pandas as pd
-
+from tqdm import tqdm
 def create_dir(path):
     """
     Creates a directory if it does not exist.
@@ -83,6 +83,7 @@ def train(config):
     #test_dataloader = DataLoader(dataset(test_data,config), batch_size=config['batch_size'], shuffle=True)
     # Initialize the detection model
     detection_model = select_det_model(config['detection_model'],config).to(device)
+    detection_model.train()
     # Initialize the main model
     main_model = select_main_model(config['main_model'],config).to(device)
     # Initialize the optimizer
@@ -90,10 +91,10 @@ def train(config):
     # Initialize the loss function
     criterion = nn.CrossEntropyLoss()
     try:
-        for epoch in range(config['epochs']):
+        for epoch in tqdm(range(config['epochs'])):
             total_correct = 0
             total_samples = 0
-            for i, data in enumerate(train_dataloader):
+            for i, data in tqdm(enumerate(train_dataloader)):
                     response, safety_class, token_hidden_states, prompt_hidden_states = data
                     optimizer.zero_grad()
                     state = token_hidden_states[:,config['layer'] - 1,config['token'] - 1,:]
