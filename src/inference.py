@@ -32,7 +32,7 @@ def generate_complete_output(prompt,config, max_length=50):
             # For every 5 iterations, check if the model has generated the end token
             # For every 5 iterations, check if the token is safe
             if _ % 5 == 0:
-                state = all_hidden_states[-1][:, config['layer'] - 1, config['token'] - 1, :]
+                state = all_hidden_states[-1][:, -1,- 1, :]
                 state = state.to('cuda')
                 output = safety_detection_model(state)
                 output2 = refusal_detection_model(state)
