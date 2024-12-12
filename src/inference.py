@@ -20,7 +20,7 @@ def generate_complete_output(prompt,config, max_length=50):
     inputs = tokenizer(prompt, return_tensors='pt')
     input_ids = inputs['input_ids']
     all_hidden_states = []
-
+    unsafe = False
     model.eval()
     with torch.no_grad():
         for _ in range(max_length):
@@ -39,6 +39,7 @@ def generate_complete_output(prompt,config, max_length=50):
                 _, predicted = torch.max(output.data, 1)
                 if predicted == 1 or predicted2 == 1:
                     print("Detected unsafe token. Stopping generation.")
+                    unsafe = True
                     break
             if next_token_id == tokenizer.eos_token_id:
                 break
@@ -50,7 +51,8 @@ def generate_complete_output(prompt,config, max_length=50):
 
     generated_text = tokenizer.decode(outputs.sequences[0], skip_special_tokens=True)
     hidden_states = outputs.hidden_states
-
+    if unsafe:
+        generated_text = "The prompt is unsafe. Please try again."
     return generated_text, hidden_states
 
 if __name__ == '__main__':

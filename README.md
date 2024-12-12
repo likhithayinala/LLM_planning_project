@@ -60,8 +60,9 @@ EECSE6694_Project/
 │   ├── dataset/es
 │   │   ├── judges/
 │   │   └── dataset_generation/
+├── scripts/
 │   ├── train.sh
-    ├── safety_judge_train.sh
+    ├── inference.sh
 │   ├── safety_judge_train.sh
 ├── requirements.txt
 └── README.md
@@ -71,26 +72,22 @@ EECSE6694_Project/
 
 Contains the source code of the project.
 
-- **`config/config.json`**: Configuration file specifying parameters for training and inference.
 - **`config/config.json`**: Configuration file specifying parameters for training.
-- **`config/inf_config.json`**: Configuration file specifying parameters for inference.- **`modules/model.py`**: Defines the neural network architecture used for language modeling.
+- **`config/inf_config.json`**: Configuration file specifying parameters for inference.
 - **`detection_model.py`**: Implements the detection model used in the project.
-- **`training.py`**: Script to train the detection model.- **`modules/training.py`**: Includes functions to train the model with given datasets and configurations.
+- **`training.py`**: Script to train the detection model.
 - **`inference.py`**: Script to perform inference using the trained model.
-- **`evaluate.py`**: Provides functions to evaluate the model's performance.- **`/evaluation.py`**: Provides functions to evaluate the model's performance on validation and test sets.
+- **`evaluate.py`**: Provides functions to evaluate the model's performance.
 - **`dataloader.py`**: Handles data loading and preprocessing.
-- **`dataset/`**: Contains datasets used in the project.
-    - **`judges/`**: Contains datasets related to judge models.### `scripts/`
-    - **`dataset_generation/`**: Scripts or data for generating datasets.
+- **`dataset/`**: Contains code to generate complete datasets used in the project.
+    - **`judges/`**: Contains python files to train judge models.### `scripts/`
+    - **`dataset_generation/`**: Contains python files to generate .h5 dataset files.
 Holds executable scripts for running training and inference.
 ### `scripts/`
 - **`train.sh`**: Bash script to initiate model training using specified configurations.
-Contains executable scripts for running training and inference.
 - **`inference.sh`**: Bash script to perform inference with the trained model.
-- **`train.sh`**: Bash script to initiate model training.
-- **`safety_judge_train.sh`**: Bash script to train the safety judge model.### `requirements.txt`
-- **`inference.sh`**: Bash script to perform inference.
-Lists the Python libraries and dependencies required to run the project.
+- **`safety_judge_train.sh`**: Bash script to train the safety judge model.
+
 ### `requirements.txt`
 
 Lists the Python libraries and dependencies required to run the project.
