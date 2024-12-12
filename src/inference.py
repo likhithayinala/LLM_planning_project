@@ -55,7 +55,7 @@ def generate_complete_output(prompt,config, max_length=50):
     return generated_text, hidden_states
 
 if __name__ == '__main__':
-    config = json.load(open('config.json'))
+    config = json.load(open('config/inf_config.json'))
     # Take a prompt as input from the user
     print("Welcome to the text generation tool! I am a friendly AI designed to help you answer questions.")
     prompt = input("Enter your question: ")

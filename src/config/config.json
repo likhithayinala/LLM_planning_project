@@ -1,7 +1,7 @@
 {
     "detection_model": "MLP",
     "main_model": "Llama2",
-    "dataset": "CIFAR10",
+    "dataset": "Safety",
     "hidden_states_path": "/home/la3073/data/hidden_data_token_new.h5",
     "result_path": "./results",
     "classifier_dim": [1024, 512, 256, 2],
