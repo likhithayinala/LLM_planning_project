@@ -13,7 +13,7 @@ def generate_complete_output(prompt,config, max_length=50):
     #safety_detection_model.load_state_dict(torch.load(config['detection_model_path']))
     safety_detection_model.eval()
     refusal_detection_model = select_det_model(config['refusal_detection_model'], config)
-    # Load the model weights
+    # Load the model weight
     #refusal_detection_model.load_state_dict(torch.load(config['refusal_detection_model_path']))
     refusal_detection_model.eval()
 
@@ -25,15 +25,14 @@ def generate_complete_output(prompt,config, max_length=50):
     with torch.no_grad():
         for _ in range(max_length):
             outputs = model(input_ids, output_hidden_states=True)
-            next_token_logits = outputs.logits[:, -1, :]
+            next_token_logits = outputs.logits[:,-1, :]
             next_token_id = torch.argmax(next_token_logits, dim=-1).unsqueeze(-1)
             all_hidden_states.extend(outputs.hidden_states)
             input_ids = torch.cat([input_ids, next_token_id], dim=-1)
             # For every 5 iterations, check if the model has generated the end token
             # For every 5 iterations, check if the token is safe
             if _ % 5 == 0:
-                state = all_hidden_states[-1][:, -1,- 1, :]
-                state = state.to('cuda')
+                state = all_hidden_states[-1][ -1,-1, :];state = state.view(1,-1);
                 output = safety_detection_model(state)
                 output2 = refusal_detection_model(state)
                 _, predicted2 = torch.max(output2.data, 1)
