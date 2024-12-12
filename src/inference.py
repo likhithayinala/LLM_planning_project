@@ -12,13 +12,13 @@ def generate_complete_output(prompt, config, max_length=50):
     
     # Load and prepare the safety detection model
     safety_detection_model = select_det_model(config['detection_model'], config)
-    safety_detection_model.load_state_dict(torch.load(config['detection_model_path']))
+    safety_detection_model.load_state_dict(torch.load(config['detection_model_path']),weights_only=True)
     safety_detection_model.eval()
     
     # Load and prepare the refusal detection model
     config['classifier_dim'] = config['refusal_classifier_dim'] 
     refusal_detection_model = select_det_model(config['refusal_detection_model'], config)
-    refusal_detection_model.load_state_dict(torch.load(config['refusal_detection_model_path']))
+    refusal_detection_model.load_state_dict(torch.load(config['refusal_detection_model_path']),weights_only=True)
     refusal_detection_model.eval()
 
     # Tokenize the input prompt
