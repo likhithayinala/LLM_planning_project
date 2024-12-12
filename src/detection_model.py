@@ -99,6 +99,8 @@ class DistilGPTClassifier(nn.Module):
         self.classifier_dims = classifier_dims
         for i in range(len(classifier_dims) - 1):
             setattr(self, f'fc{i+1}', nn.Linear(classifier_dims[i], classifier_dims[i+1]))
+            if i < len(classifier_dims) - 2:
+                setattr(self, f'bn{i+1}', nn.BatchNorm1d(classifier_dims[i+1]))
         
     def forward(self, x):
         """
@@ -152,6 +154,8 @@ class TinyBERTClassifier(nn.Module):
         self.classifier_dims = classifier_dims
         for i in range(len(classifier_dims) - 1):
             setattr(self, f'fc{i+1}', nn.Linear(classifier_dims[i], classifier_dims[i+1]))
+            if i < len(classifier_dims) - 2:
+                setattr(self, f'bn{i+1}', nn.BatchNorm1d(classifier_dims[i+1]))
         
     def forward(self, x):
         """
