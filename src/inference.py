@@ -7,14 +7,14 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 def generate_complete_output(prompt,config, max_length=50):
     model_name = config['model_name']
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name, output_hidden_states=True)
+    model = AutoModelForCausalLM.from_pretrained(model_name, output_hidden_states=True, return_dict_in_generate=True)
     safety_detection_model = select_det_model(config['detection_model'], config)
     # Load the model weights
-    #safety_detection_model.load_state_dict(torch.load(config['detection_model_path']))
+    safety_detection_model.load_state_dict(torch.load(config['detection_model_path']))
     safety_detection_model.eval()
     refusal_detection_model = select_det_model(config['refusal_detection_model'], config)
     # Load the model weight
-    #refusal_detection_model.load_state_dict(torch.load(config['refusal_detection_model_path']))
+    refusal_detection_model.load_state_dict(torch.load(config['refusal_detection_model_path']))
     refusal_detection_model.eval()
 
     inputs = tokenizer(prompt, return_tensors='pt')
