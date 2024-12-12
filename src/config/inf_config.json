@@ -1,5 +1,6 @@
 {
     "detection_model": "MLP",
+    "refusal_detection_model": "MLP",
     "main_model": "Llama2",
     "dataset": "CIFAR10",
     "hidden_states_path": "/home/la3073/data/hidden_data_token_new.h5",
@@ -14,6 +15,6 @@
     "debug": false,
     "tag": "experiment_1",
     "checkpoint_epoch": 5,
-    "refusa"
-
+    "detection_model_path": "/home/la3073/data/detection_model.h5",
+    "refusal_detection_model_path": "/home/la3073/data/safety_detection_model.h5"
 }

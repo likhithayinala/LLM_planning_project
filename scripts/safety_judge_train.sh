@@ -1,5 +1,4 @@
-cd src
-cd judge_llm
+cd src\dataset\judges\safety_judge_llm
 !python train.py \
     --model_name_or_path "Qwen/Qwen2.5-0.5B" \
     --train_data_name_or_path PKU-Alignment/BeaverTails:330k_train \
