@@ -1,6 +1,6 @@
 {
     "detection_model": "MLP",
-    "refusal_detection_model": "TinyBERTClassifier",
+    "refusal_detection_model": "MLP",
     "model_name": "meta-llama/Llama-2-7b-chat-hf",
     "dataset": "Safety",
     "hidden_states_path": "/home/la3073/data/hidden_data_token_new.h5",

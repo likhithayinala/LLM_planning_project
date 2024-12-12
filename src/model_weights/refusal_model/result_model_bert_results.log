@@ -1,6 +1,0 @@
-INFO:root:Epoch: 0, Loss: 0.20979364216327667, Accuracy: 93.19%
-INFO:root:Epoch: 1, Loss: 0.4471096992492676, Accuracy: 94.44%
-INFO:root:Epoch: 2, Loss: 0.018496036529541016, Accuracy: 95.37%
-INFO:root:Epoch: 3, Loss: 0.08201079815626144, Accuracy: 95.99%
-INFO:root:Epoch: 4, Loss: 0.22746598720550537, Accuracy: 96.21%
-INFO:root:Best accuracy: 96.21%
