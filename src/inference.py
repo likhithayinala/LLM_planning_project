@@ -1,8 +1,8 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 import json
 from types import SimpleNamespace
 from detection_model import select_det_model
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 def generate_complete_output(prompt,config, max_length=50):
     model_name = config['model_name']
@@ -10,11 +10,11 @@ def generate_complete_output(prompt,config, max_length=50):
     model = AutoModelForCausalLM.from_pretrained(model_name, output_hidden_states=True)
     safety_detection_model = select_det_model(config['detection_model'], config)
     # Load the model weights
-    safety_detection_model.load_state_dict(torch.load(config['detection_model_path']))
+    #safety_detection_model.load_state_dict(torch.load(config['detection_model_path']))
     safety_detection_model.eval()
     refusal_detection_model = select_det_model(config['refusal_detection_model'], config)
     # Load the model weights
-    refusal_detection_model.load_state_dict(torch.load(config['refusal_detection_model_path']))
+    #refusal_detection_model.load_state_dict(torch.load(config['refusal_detection_model_path']))
     refusal_detection_model.eval()
 
     inputs = tokenizer(prompt, return_tensors='pt')
@@ -30,8 +30,6 @@ def generate_complete_output(prompt,config, max_length=50):
             all_hidden_states.extend(outputs.hidden_states)
             input_ids = torch.cat([input_ids, next_token_id], dim=-1)
             # For every 5 iterations, check if the model has generated the end token
-            if _ % 5 == 0 and next_token_id == tokenizer.eos_token_id:
-                break
             # For every 5 iterations, check if the token is safe
             if _ % 5 == 0:
                 state = all_hidden_states[-1][:, config['layer'] - 1, config['token'] - 1, :]
@@ -43,6 +41,8 @@ def generate_complete_output(prompt,config, max_length=50):
                 if predicted == 1 or predicted2 == 1:
                     print("Detected unsafe token. Stopping generation.")
                     break
+            if next_token_id == tokenizer.eos_token_id:
+                break
 
         outputs = SimpleNamespace(
             sequences=input_ids,
