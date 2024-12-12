@@ -14,11 +14,11 @@ To set up the project locally, please follow these steps:
 
 1. **Clone the repository**
     ```bash
-    git clone https://github.com/yourusername/EECSE6694_Project.git
+    git clone https://github.com/likhithayinala/GENAI_Project
     ```
 2. **Navigate to the project directory**
     ```bash
-    cd EECSE6694_Project
+    cd GENAI_Project
     ```
 3. **Install dependencies**
     ```bash
@@ -27,14 +27,13 @@ To set up the project locally, please follow these steps:
 
 ## Usage
 
-# Training 
+### Training 
 After installation, you can run train by first modifying the configuration file (in src/config/config.json) to include the dataset path. After which we can make additional modifications in scripts/train.sh to select model, token and layer for further specifications. Then run the following command.
 ```bash
 bash scripts/train.sh
 ```
-For detailed usage instructions and examples, refer to the [user guide](docs/USER_GUIDE.md).
 
-# Inference 
+### Inference 
 If you want to test the proposed pipeline, you need access to Llama 2 7B in huggingface. If you have access, you can input your credentials using:
 ```bash
 huggingface-cli login
@@ -57,9 +56,12 @@ EECSE6694_Project/
 │   ├── training.py
 |   ├── inference.py
 │   ├── dataloader.py
-│   ├── dataset/es
+│   ├── dataset/
 │   │   ├── judges/
 │   │   └── dataset_generation/
+│   ├── model_weights/
+│   │   ├── refusal_model/
+│   │   └── safety_model/
 ├── scripts/
 │   ├── train.sh
     ├── inference.sh
@@ -80,8 +82,11 @@ Contains the source code of the project.
 - **`evaluate.py`**: Provides functions to evaluate the model's performance.
 - **`dataloader.py`**: Handles data loading and preprocessing.
 - **`dataset/`**: Contains code to generate complete datasets used in the project.
-    - **`judges/`**: Contains python files to train judge models.### `scripts/`
+    - **`judges/`**: Contains python files to train judge models.
     - **`dataset_generation/`**: Contains python files to generate .h5 dataset files.
+- **`model_weights/`**: Contains model weights to run inference.
+    - **`safety_model/`**: Contains .pth model weights for safety.
+    - **`refusal_model/`**: Contains .pth model weights for refusal.
 Holds executable scripts for running training and inference.
 ### `scripts/`
 - **`train.sh`**: Bash script to initiate model training using specified configurations.

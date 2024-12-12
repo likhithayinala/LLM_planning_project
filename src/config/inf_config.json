@@ -1,6 +1,6 @@
 {
     "detection_model": "MLP",
-    "refusal_detection_model": "MLP",
+    "refusal_detection_model": "TinyBERTClassifier",
     "model_name": "meta-llama/Llama-2-7b-chat-hf",
     "dataset": "Safety",
     "hidden_states_path": "/home/la3073/data/hidden_data_token_new.h5",
@@ -15,6 +15,6 @@
     "debug": false,
     "tag": "experiment_1",
     "checkpoint_epoch": 5,
-    "detection_model_path": "/home/la3073/data/detection_model.h5",
-    "refusal_detection_model_path": "/home/la3073/data/safety_detection_model.h5"
+    "detection_model_path": "src/model_weights/refusal_model/result_model_bert_best_model.pth",
+    "refusal_detection_model_path": "src/model_weights/safety_model/result_model_best_model.pth"
 }
