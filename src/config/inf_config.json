@@ -16,6 +16,6 @@
     "debug": false,
     "tag": "experiment_1",
     "checkpoint_epoch": 5,
-    "detection_model_path": "model_weights/safety_model/result_model_mlp_best_model.pth",
-    "refusal_detection_model_path": "model_weights/refusal_model/result_model_best_model.pth"
+    "detection_model_path": "model_weights/safety_model/result_model_best_model.pth",
+    "refusal_detection_model_path": "model_weights/refusal_model/result_model_mlp_best_model.pth"
 }
