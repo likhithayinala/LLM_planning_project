@@ -1,4 +1,4 @@
-# EECSE6694_Project
+# Do LLM's plan ahead?
 ## Table of Contents
 - [Introduction](#introduction)
 - [Installation](#installation)
@@ -6,7 +6,7 @@
 - [CodeStructure](#codestructure)
 ## Introduction
 
-EECSE6694_Project is a comprehensive project developed as part of the EECSE6694 course. It aims to provide solutions and insights into how LLMs work and predict future tokens. We use these findings to early stop an LLM in case the answer doesn't align to the given specifications. In our project specifically, this task is for preventing LLM refusal and unsafe answers.
+ This projects aims to provide solutions and insights into how LLMs work and predict future tokens. We use these findings to early stop an LLM in case the answer doesn't align to the given specifications. In our project specifically, this task is for preventing LLM refusal and unsafe answers.
 
 ## Installation
 
